@@ -1,5 +1,6 @@
 import grabador_aux
 import tkinter as tk
+from tkinter import OptionMenu
 from threading import Thread
 from PIL import Image, ImageTk
 import numpy as np
@@ -8,8 +9,9 @@ import cv2 as cv
 def iniciar_grabacion():
     nombre_archivo = Nombre_text.get() or "Grabado archivo.avi"
     # Ejecutar en un hilo separado para no bloquear la GUI
+    print(nombre_archivo + " " + resolucion.cget())
     Thread(target=grabador_aux.grabador, 
-           kwargs={'resolucion': (1920, 1080), 
+           kwargs={'resolucion': resoluciones[resolucion["menu"].index(tk.StringVar(value=resolucion.cget("text")).get())], 
                    'fps': 60.0, 
                    'archivo_nombre': nombre_archivo}, 
            daemon=True).start()
@@ -36,15 +38,14 @@ ventana.geometry("800x500")
 
 # Nombre archivo
 Nombre = tk.Label(ventana, text="Nombre del archivo:")
-Nombre_text = tk.Entry(ventana, width=60)
+Nombre_text = tk.Entry(ventana, width=30)
 Nombre_text.insert(0, "Grabado archivo.avi")
 
 #Resolución y fps
-resulocion= tk.Combobox(
-    state="readonly",
-    values=["(1920, 1080)", "(1366, 768)", "(1280, 720)", "(1024, 768)", "(800, 600)"]
-)
-resulocion.current(0)
+
+resoluciones=[(1920, 1080),(1366, 768),(1280, 720),(1024, 768),(800, 600)]
+resolucion= OptionMenu(ventana, tk.StringVar(value="1920x1080"), *["{}x{}".format(w,h) for w,h in resoluciones])
+resolucion.config(width=15)
 
 # Área de visualización (ahora mostrará la vista previa)
 Area = tk.Label(ventana, bg='black')
@@ -57,11 +58,11 @@ B_Detener = tk.Button(button_frame, text="Detener", padx=20, pady=10, command=gr
 # Layout
 Nombre.grid(row=2, column=0, padx=10, pady=10, sticky='w')
 Nombre_text.grid(row=2, column=1, padx=10, pady=10, sticky='ew')
-button_frame.grid(row=2, column=2, padx=10, pady=10)
-resulocion.grid(row=2, column=1, padx=10, pady=10, sticky='ew')
+button_frame.grid(row=2, column=3, padx=10, pady=10)
+resolucion.grid(row=2, column=2, padx=5, pady=10, sticky='ew')
 B_Grabar.pack(side='left', padx=5)
 B_Detener.pack(side='left', padx=5)
-Area.grid(row=1, column=0, columnspan=3, padx=10, pady=10, sticky='nsew')
+Area.grid(row=1, column=0, columnspan=4, padx=10, pady=10, sticky='nsew')
 
 # Configurar el redimensionamiento
 ventana.grid_columnconfigure(1, weight=1)

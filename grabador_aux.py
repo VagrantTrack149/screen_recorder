@@ -47,6 +47,10 @@ def grabador(resolucion=(1920, 1080), fps=60.0, archivo_nombre="Grabado archivo.
             
             out.write(frame)
             #cv.imshow("Grabación", frame)
+            if out.isOpened() == False:
+                print("Error al abrir el archivo de video para escritura")
+                raise ValueError("Error al escribir el archivo")
+                break
             #no subi los ultimos cambios y no me acuerdo que queria cambiar xd
             if cv.waitKey(1) == ord("q"):
                 break
