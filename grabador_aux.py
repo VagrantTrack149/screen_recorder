@@ -27,7 +27,7 @@ def grabador(resolucion=(1920, 1080), fps=60.0, archivo_nombre="Grabado archivo.
     with lock:
         paro = False
     
-    codec = cv.VideoWriter_fourcc(*"XVID")
+    codec = cv.VideoWriter_fourcc(*'MPEG')
     out = cv.VideoWriter(archivo_nombre, codec, fps, resolucion)
     
     try:
@@ -47,7 +47,7 @@ def grabador(resolucion=(1920, 1080), fps=60.0, archivo_nombre="Grabado archivo.
             
             out.write(frame)
             #cv.imshow("Grabación", frame)
-            #no subi los ultimos cambios y no me acuerdo que queria cambair xd
+            #no subi los ultimos cambios y no me acuerdo que queria cambiar xd
             if cv.waitKey(1) == ord("q"):
                 break
     finally:
