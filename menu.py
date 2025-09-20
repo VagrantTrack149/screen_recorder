@@ -5,22 +5,7 @@ from threading import Thread
 from PIL import Image, ImageTk
 import numpy as np
 import cv2 as cv
-from tkinter import *
-
-def iniciar_grabacion():
-    nombre_archivo = Nombre_text.get() or "Grabado archivo.avi"
-    # Ejecutar en un hilo separado para no bloquear la GUI
-    
-    #selected_index = lista_resoluciones.curselection()[0] if lista_resoluciones.curselection() else 0
-    #print("Archivo"+nombre_archivo + " resolucion index" + selected_index.__str__()+ " resolucion y tipo " + str(resoluciones[selected_index]) + str(type(resoluciones[selected_index])))
-    print("Archivo"+nombre_archivo + " resolucion y tipo " + str(resolucion["menu"].index(tk.StringVar(value=resolucion.cget("text")).get())) + str(type(resoluciones[resolucion["menu"].index(tk.StringVar(value=resolucion.cget("text")).get())])))
-    Thread(target=grabador_aux.grabador, 
-           kwargs={'resolucion':  #resoluciones[selected_index],
-                    resoluciones[resolucion["menu"].index(tk.StringVar(value=resolucion.cget("text")).get())], 
-                   'fps': 60.0, 
-                   'archivo_nombre': nombre_archivo}, 
-           daemon=True).start()
-    update_preview()
+#from tkinter import *
 
 def update_preview():
     frame = grabador_aux.get_current_frame()
@@ -34,8 +19,26 @@ def update_preview():
         Area.imgtk = imgtk  # Mantener una referencia
         Area.config(image=imgtk)
     
-    # Actualzación 60fps vista previa
-    ventana.after(17, update_preview)  # ≈60 FPS (1000ms/60 ≈ 16.666ms)
+    #vista previa
+    ventana.after(33, update_preview)  # ≈15 FPS (1000ms/15 ≈ 66ms) 1000/30=33ms
+
+
+def iniciar_grabacion():
+    nombre_archivo = Nombre_text.get() or "Grabado archivo.avi"
+    # Ejecutar en un hilo separado para no bloquear la GUI
+    
+    #selected_index = lista_resoluciones.curselection()[0] if lista_resoluciones.curselection() else 0
+    #print("Archivo"+nombre_archivo + " resolucion index" + selected_index.__str__()+ " resolucion y tipo " + str(resoluciones[selected_index]) + str(type(resoluciones[selected_index])))
+    #print("Archivo"+nombre_archivo + " resolucion y tipo " + str(resolucion["menu"].index(tk.StringVar(value=resolucion.cget("text")).get())) + str(type(resoluciones[resolucion["menu"].index(tk.StringVar(value=resolucion.cget("text")).get())])))
+    #resoluciones[selected_index],
+    
+    Thread(target=grabador_aux.grabador, 
+           kwargs={'resolucion': resoluciones[resolucion["menu"].index(tk.StringVar(value=resolucion.cget("text")).get())], 
+                   #(1920,1080),  
+                   'fps': 60.0, 
+                   'archivo_nombre': nombre_archivo}, 
+           daemon=True).start()
+    update_preview()
 
 ventana = tk.Tk()
 ventana.title("Grabador")

@@ -27,8 +27,8 @@ def grabador(resolucion=(1920, 1080), fps=60.0, archivo_nombre="Grabado archivo.
     with lock:
         paro = False
     
-    codec = cv.VideoWriter_fourcc(*'MPEG')
-    out = cv.VideoWriter(archivo_nombre, codec, fps, resolucion)
+    codec = cv.VideoWriter_fourcc(*"XVID")
+    out = cv.VideoWriter(archivo_nombre, codec, fps*2, resolucion)
     
     try:
         while True:
