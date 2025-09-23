@@ -6,7 +6,7 @@ from PIL import Image, ImageTk
 import numpy as np
 import cv2 as cv
 #from tkinter import *
-
+#YA LO VOY A CORREGIR Y LO VOY A DEJAR COMO VERSIÓN FINAAAAL
 def update_preview():
     frame = grabador_aux.get_current_frame()
     if frame is not None:
