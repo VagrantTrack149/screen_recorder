@@ -3,6 +3,7 @@ import numpy as np
 import pyautogui
 from threading import Lock
 from PIL import Image, ImageTk
+import time
 
 # Variables de control con protección de hilos
 paro = False
@@ -20,16 +21,16 @@ def get_current_frame():
     with frame_lock:
         return current_frame
 
-def grabador(resolucion=(1920, 1080), fps=60.0, archivo_nombre="Grabado archivo.avi"):
+def grabador(resolucion, fps, archivo_nombre="Grabado archivo.mp4"):
     global paro, lock, current_frame, frame_lock
     
     # Reiniciar el estado de paro
     with lock:
         paro = False
-    
-    codec = cv.VideoWriter_fourcc(*"XVID")
-    out = cv.VideoWriter(archivo_nombre, codec, fps*2, resolucion)
-    
+    codec = cv.VideoWriter_fourcc('m', 'p', '4', 'v')
+    print(f"Grabando en {archivo_nombre} a {resolucion[0]}x{resolucion[1]} a {fps} FPS")
+    out = cv.VideoWriter(archivo_nombre, codec, fps, resolucion)
+
     try:
         while True:
             # Verificar si se debe detener
@@ -45,12 +46,14 @@ def grabador(resolucion=(1920, 1080), fps=60.0, archivo_nombre="Grabado archivo.
             with frame_lock:
                 current_frame = cv.resize(frame, (640, 360))  # Redimensionar para la vista previa
             
+            time.sleep(1 / fps) # Controlar la velocidad de grabación
+            
             out.write(frame)
             #cv.imshow("Grabación", frame)
-            if out.isOpened() == False:
-                print("Error al abrir el archivo de video para escritura")
-                raise ValueError("Error al escribir el archivo")
-                break
+            #if out.isOpened() == False:
+            #    print("Error al abrir el archivo de video para escritura")
+            #    raise ValueError("Error al escribir el archivo")
+            #    break
             #no subi los ultimos cambios y no me acuerdo que queria cambiar xd
             if cv.waitKey(1) == ord("q"):
                 break

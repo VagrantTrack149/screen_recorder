@@ -20,22 +20,28 @@ def update_preview():
         Area.config(image=imgtk)
     
     #vista previa
-    ventana.after(33, update_preview)  # ≈15 FPS (1000ms/15 ≈ 66ms) 1000/30=33ms
+    ventana.after(33, update_preview)  # 30 FPS (1000ms/30 ≈ 33ms)
 
 
 def iniciar_grabacion():
-    nombre_archivo = Nombre_text.get() or "Grabado archivo.avi"
+    nombre_archivo = Nombre_text.get() or "Grabado archivo.mp4"
     # Ejecutar en un hilo separado para no bloquear la GUI
     
     #selected_index = lista_resoluciones.curselection()[0] if lista_resoluciones.curselection() else 0
     #print("Archivo"+nombre_archivo + " resolucion index" + selected_index.__str__()+ " resolucion y tipo " + str(resoluciones[selected_index]) + str(type(resoluciones[selected_index])))
-    #print("Archivo"+nombre_archivo + " resolucion y tipo " + str(resolucion["menu"].index(tk.StringVar(value=resolucion.cget("text")).get())) + str(type(resoluciones[resolucion["menu"].index(tk.StringVar(value=resolucion.cget("text")).get())])))
-    #resoluciones[selected_index],
     
+    # Obtener la resolución seleccionada del OptionMenu
+    selected_resolution_str = tk.StringVar(value=resolucion.cget("text")).get()
+    width_str, height_str = selected_resolution_str.split('x')
+    selected_resolution = (int(width_str), int(height_str))
+    
+    print(f"Iniciando grabación con resolución: {selected_resolution}")
+
     Thread(target=grabador_aux.grabador, 
-           kwargs={'resolucion': resoluciones[resolucion["menu"].index(tk.StringVar(value=resolucion.cget("text")).get())], 
+           kwargs={'resolucion': selected_resolution,
+                   #resoluciones[resolucion["menu"].index(tk.StringVar(value=resolucion.cget("text")).get())], 
                    #(1920,1080),  
-                   'fps': 60.0, 
+                   'fps': 20.0, 
                    'archivo_nombre': nombre_archivo}, 
            daemon=True).start()
     update_preview()
@@ -47,7 +53,7 @@ ventana.geometry("800x500")
 # Nombre archivo
 Nombre = tk.Label(ventana, text="Nombre del archivo:")
 Nombre_text = tk.Entry(ventana, width=30)
-Nombre_text.insert(0, "Grabado archivo.avi")
+Nombre_text.insert(0, "Grabacion.mp4")
 
 #Resolución y fps
 
